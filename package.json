@@ -1,0 +1,9 @@
+{
+  "name": "canvas-snake-game",
+  "version": "1.0.0",
+  "description": "canvas + tone.js snake game practice",
+  "main": "index.js",
+  "repository": "https://github.com/tony40508/canvas-snake-game.git",
+  "author": "takeu",
+  "license": "MIT"
+}
