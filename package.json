@@ -5,5 +5,8 @@
   "main": "index.js",
   "repository": "https://github.com/tony40508/canvas-snake-game.git",
   "author": "takeu",
-  "license": "MIT"
+  "license": "MIT",
+  "prettier": {
+    "singleQuote": true
+  }
 }
