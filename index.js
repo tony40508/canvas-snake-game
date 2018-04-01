@@ -119,7 +119,10 @@ Game.prototype.startGame = function() {
 };
 Game.prototype.endGame = function() {
   this.start = false;
-  // $("h2").text("Score: " + (this.snake.body.length - 5) * 10);
+
+  let finalScore = document.getElementById('score');
+  finalScore.innerHTML = `Score: ${(this.snake.maxLength - 5) * 10}`;
+
   document.getElementById('panel').style.display = '';
 
   // this.playSound("A3");
@@ -184,6 +187,7 @@ Game.prototype.update = function() {
       }
     });
 
+    // 碰到邊界
     if (this.snake.checkBoundary(this.gameWidth) == false) {
       this.endGame();
     }
