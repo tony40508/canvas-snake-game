@@ -88,7 +88,7 @@ let Game = function() {
   this.boxWidth = 12;
   this.boxSpan = 2;
   this.gameWidth = 40;
-  this.speed = 10;
+  this.speed = 7;
   this.snake = new Snake();
   this.foods = [];
   this.start = false;
@@ -111,7 +111,7 @@ Game.prototype.init = function() {
 
 Game.prototype.startGame = function() {
   this.start = true;
-  // this.snake = new Snake();
+  this.snake = new Snake();
 
   document.getElementById('panel').style.display = 'none';
   // this.playSound("C#5", -20);
@@ -193,19 +193,7 @@ Game.prototype.update = function() {
     }
   }
 
-  // this.speed = Math.sqrt(this.snake.body.length) + 5;
-
-  if (this.start) {
-    this.snake.update();
-
-    this.foods.forEach((food, i) => {
-      if (this.snake.head.equal(food)) {
-        this.snake.maxLength++;
-        this.foods.splice(i, 1);
-        this.generateFood();
-      }
-    });
-  }
+  this.speed = Math.sqrt(this.snake.body.length) + 5;
 
   setTimeout(() => {
     this.update();
@@ -218,9 +206,34 @@ Game.prototype.generateFood = function() {
   let y = Math.floor(Math.random() * this.gameWidth);
 
   this.foods.push(new Vector(x, y));
-  // this.drawEffect(x, y);
+  this.drawEffect(x, y);
   // this.playSound("E5", -20);
   // this.playSound("A5", -20, 200);
+};
+
+Game.prototype.drawEffect = function(x, y) {
+  let r = 2;
+  let pos = this.getPositon(x, y);
+
+  let effect = () => {
+    r++;
+
+    this.ctx.strokeStyle = `rgba(255, 0, 0, ${(100 - r) / 100})`;
+    this.ctx.beginPath();
+    this.ctx.arc(
+      pos.x + this.boxWidth / 2,
+      pos.y + this.boxWidth / 2,
+      r,
+      0,
+      Math.PI * 2
+    );
+    this.ctx.stroke();
+
+    if (r < 100) {
+      requestAnimationFrame(effect);
+    }
+  };
+  requestAnimationFrame(effect);
 };
 
 // New Game
