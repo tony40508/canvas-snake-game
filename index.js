@@ -41,10 +41,10 @@ var Snake = function() {
 
 Snake.prototype.update = function() {
   let newHead = this.head.add(this.speed);
-  
+
   this.body.push(this.head);
   this.head = newHead;
-  
+
   // 尾端超出去的拿掉，保持蛇的長度是 maxLength
   while (this.body.length > this.maxLength) {
     this.body.shift();
@@ -76,19 +76,29 @@ Snake.prototype.setDirection = function(direction) {
   }
 };
 
+Snake.prototype.checkBoundary = function(gameWidth) {
+  let xInRange = 0 <= this.head.x && this.head.x < gameWidth;
+  let yInRange = 0 <= this.head.y && this.head.y < gameWidth;
+
+  return xInRange && yInRange;
+};
+
 // Game
 let Game = function() {
   this.boxWidth = 12;
   this.boxSpan = 2;
   this.gameWidth = 40;
-  this.speed = 30;
+  this.speed = 10;
   this.snake = new Snake();
-  this.foods = []
-}
+  this.foods = [];
+  this.start = false;
+  1;
+};
 
 Game.prototype.init = function() {
   this.canvas = document.getElementById('mycanvas');
-  this.canvas.width = this.boxWidth * this.gameWidth + this.boxSpan * (this.gameWidth - 1); 
+  this.canvas.width =
+    this.boxWidth * this.gameWidth + this.boxSpan * (this.gameWidth - 1);
   this.canvas.height = this.canvas.width;
   this.ctx = this.canvas.getContext('2d');
 
@@ -97,6 +107,24 @@ Game.prototype.init = function() {
   setTimeout(() => {
     this.update();
   }, 1000 / this.speed);
+};
+
+Game.prototype.startGame = function() {
+  this.start = true;
+  // this.snake = new Snake();
+
+  document.getElementById('panel').style.display = 'none';
+  // this.playSound("C#5", -20);
+  // this.playSound("E5", -20, 200);
+};
+Game.prototype.endGame = function() {
+  this.start = false;
+  // $("h2").text("Score: " + (this.snake.body.length - 5) * 10);
+  document.getElementById('panel').style.display = '';
+
+  // this.playSound("A3");
+  // this.playSound("E2", -10, 200);
+  // this.playSound("A2", -10, 400);
 };
 
 Game.prototype.getPositon = function(x, y) {
@@ -108,7 +136,7 @@ Game.prototype.getPositon = function(x, y) {
 
 Game.prototype.drawBlock = function(v, color) {
   let pos = this.getPositon(v.x, v.y);
-  
+
   this.ctx.fillStyle = color;
   this.ctx.fillRect(pos.x, pos.y, this.boxWidth, this.boxWidth);
 };
@@ -137,28 +165,43 @@ Game.prototype.render = function() {
 };
 
 Game.prototype.update = function() {
-  // if (this.start) {
-  //   this.playSound('A2', -20);
-  //   this.snake.update();
-  //   this.foods.forEach((food, i) => {
-  //     if (this.snake.head.equal(food)) {
-  //       this.snake.maxLength++;
-  //       this.foods.splice(i, 1);
-  //       this.generateFood();
-  //     }
-  //   });
-  //   this.snake.body.forEach(sp => {
-  //     if (sp.equal(this.snake.head)) {
-  //       console.log('collide body');
-  //       this.endGame();
-  //     }
-  //   });
-  //   if (this.snake.checkBoundary(this.gameWidth) == false) {
-  //     this.endGame();
-  //   }
-  // }
+  if (this.start) {
+    // this.playSound('A2', -20);
+    this.snake.update();
+
+    this.foods.forEach((food, i) => {
+      if (this.snake.head.equal(food)) {
+        this.snake.maxLength++;
+        this.foods.splice(i, 1);
+        this.generateFood();
+      }
+    });
+
+    // 頭撞到身體
+    this.snake.body.forEach(bodyPos => {
+      if (this.snake.head.equal(bodyPos)) {
+        this.endGame();
+      }
+    });
+
+    if (this.snake.checkBoundary(this.gameWidth) == false) {
+      this.endGame();
+    }
+  }
+
   // this.speed = Math.sqrt(this.snake.body.length) + 5;
-  this.snake.update()
+
+  if (this.start) {
+    this.snake.update();
+
+    this.foods.forEach((food, i) => {
+      if (this.snake.head.equal(food)) {
+        this.snake.maxLength++;
+        this.foods.splice(i, 1);
+        this.generateFood();
+      }
+    });
+  }
 
   setTimeout(() => {
     this.update();
@@ -178,7 +221,7 @@ Game.prototype.generateFood = function() {
 
 // New Game
 let game = new Game();
-game.init()
+game.init();
 
 // KeyDown
 document.addEventListener('keydown', e => {
