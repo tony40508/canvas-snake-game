@@ -93,6 +93,7 @@ Game.prototype.init = function() {
   this.ctx = this.canvas.getContext('2d');
 
   this.render();
+  this.generateFood();
   setTimeout(() => {
     this.update();
   }, 1000 / this.speed);
@@ -126,9 +127,9 @@ Game.prototype.render = function() {
     this.drawBlock(snakePos, 'lightGreen');
   });
 
-  // this.foods.forEach(sp => {
-  //   this.drawBlock(sp, 'red');
-  // });
+  this.foods.forEach(pos => {
+    this.drawBlock(pos, 'red');
+  });
 
   requestAnimationFrame(() => {
     this.render();
@@ -162,6 +163,17 @@ Game.prototype.update = function() {
   setTimeout(() => {
     this.update();
   }, parseInt(1000 / this.speed));
+};
+
+Game.prototype.generateFood = function() {
+  // 產生隨機位置
+  let x = Math.floor(Math.random() * this.gameWidth);
+  let y = Math.floor(Math.random() * this.gameWidth);
+
+  this.foods.push(new Vector(x, y));
+  // this.drawEffect(x, y);
+  // this.playSound("E5", -20);
+  // this.playSound("A5", -20, 200);
 };
 
 // New Game
