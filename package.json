@@ -8,5 +8,6 @@
   "license": "MIT",
   "prettier": {
     "singleQuote": true
-  }
+  },
+  "dependencies": {}
 }
