@@ -114,8 +114,8 @@ Game.prototype.startGame = function() {
   this.snake = new Snake();
 
   document.getElementById('panel').style.display = 'none';
-  // this.playSound("C#5", -20);
-  // this.playSound("E5", -20, 200);
+  this.playSound("C#5", -20); // #do
+  this.playSound("E5", -20, 200); // mi
 };
 Game.prototype.endGame = function() {
   this.start = false;
@@ -125,9 +125,9 @@ Game.prototype.endGame = function() {
 
   document.getElementById('panel').style.display = '';
 
-  // this.playSound("A3");
-  // this.playSound("E2", -10, 200);
-  // this.playSound("A2", -10, 400);
+  this.playSound('A3'); // la
+  this.playSound('E2', -10, 200); // mi
+  this.playSound('A2', -10, 400); // la
 };
 
 Game.prototype.getPositon = function(x, y) {
@@ -169,7 +169,7 @@ Game.prototype.render = function() {
 
 Game.prototype.update = function() {
   if (this.start) {
-    // this.playSound('A2', -20);
+    this.playSound('A2', -30); // 低音 la
     this.snake.update();
 
     this.foods.forEach((food, i) => {
@@ -207,8 +207,8 @@ Game.prototype.generateFood = function() {
 
   this.foods.push(new Vector(x, y));
   this.drawEffect(x, y);
-  // this.playSound("E5", -20);
-  // this.playSound("A5", -20, 200);
+  this.playSound('E5', -20); // 高音 mi
+  this.playSound('A5', -20, 200); // la delay 200
 };
 
 Game.prototype.drawEffect = function(x, y) {
@@ -234,6 +234,15 @@ Game.prototype.drawEffect = function(x, y) {
     }
   };
   requestAnimationFrame(effect);
+};
+
+Game.prototype.playSound = function(note, volume, when) {
+  setTimeout(function() {
+    var synth = new Tone.Synth().toMaster();
+
+    synth.volume.value = volume || -12;
+    synth.triggerAttackRelease(note, '8n');
+  }, when || 0);
 };
 
 // New Game
